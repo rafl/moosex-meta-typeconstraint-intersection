@@ -87,7 +87,26 @@ sub validate {
 }
 
 sub is_subtype_of {
-    confess 'Not yet implemented';
+    my ($self, $type_or_name) = @_;
+    my $other = find_type_constraint($type_or_name);
+
+    return unless $other->isa(__PACKAGE__);
+
+    my @self_constraints  = @{ $self->type_constraints  };
+    my @other_constraints = @{ $other->type_constraints };
+
+    return unless @self_constraints < @other_constraints;
+
+  CONSTRAINT: for my $tc (@other_constraints) {
+        for (my $i = 0; $i < @self_constraints; $i++) {
+            if ($tc->is_subtype_of($self_constraints[$i])) {
+                splice @self_constraints, $i, 1;
+                next CONSTRAINT;
+            }
+        }
+    }
+
+    return @self_constraints == 0;
 }
 
 sub create_child_type {
