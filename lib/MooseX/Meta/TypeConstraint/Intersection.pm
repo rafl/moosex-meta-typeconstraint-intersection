@@ -95,7 +95,7 @@ sub is_subtype_of {
     my @self_constraints  = @{ $self->type_constraints  };
     my @other_constraints = @{ $other->type_constraints };
 
-    return unless @self_constraints < @other_constraints;
+    return if @self_constraints < @other_constraints;
 
   CONSTRAINT: for my $tc (@other_constraints) {
         for (my $i = 0; $i < @self_constraints; $i++) {
