@@ -13,13 +13,6 @@ has type_constraints => (
     default => sub { [] },
 );
 
-has name => (
-    is      => 'ro',
-    isa     => Str,
-    lazy    => 1,
-    builder => '_build_name',
-);
-
 around new => sub {
     my ($next, $class, %args) = @_;
     my $name = join '&' => sort { $a cmp $b }
