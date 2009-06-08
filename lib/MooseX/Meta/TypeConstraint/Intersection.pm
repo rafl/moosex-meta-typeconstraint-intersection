@@ -1,7 +1,7 @@
 package MooseX::Meta::TypeConstraint::Intersection;
 
 use Moose;
-use MooseX::Types::Moose qw/ArrayRef Str/;
+use MooseX::Types::Moose qw/ArrayRef/;
 use Moose::Util::TypeConstraints 'find_type_constraint';
 use namespace::autoclean;
 
