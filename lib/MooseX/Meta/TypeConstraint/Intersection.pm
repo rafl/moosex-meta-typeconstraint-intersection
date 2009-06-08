@@ -109,8 +109,4 @@ sub is_subtype_of {
     return @self_constraints == 0;
 }
 
-sub create_child_type {
-    confess 'Not yet implemented';
-}
-
 1;
