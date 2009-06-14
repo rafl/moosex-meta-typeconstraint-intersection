@@ -3,13 +3,14 @@ package MooseX::Meta::TypeConstraint::Intersection;
 use Moose;
 use MooseX::Types::Moose qw/ArrayRef/;
 use Moose::Util::TypeConstraints 'find_type_constraint';
+use aliased 'Moose::Meta::TypeConstraint';
 use namespace::autoclean;
 
-extends 'Moose::Meta::TypeConstraint';
+extends TypeConstraint;
 
 has type_constraints => (
     is      => 'ro',
-    isa     => ArrayRef,
+    isa     => ArrayRef[TypeConstraint],
     default => sub { [] },
 );
 
