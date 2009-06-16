@@ -171,4 +171,10 @@ sub is_subtype_of {
     return @self_constraints == 0;
 }
 
+=head1 THANKS
+
+Ionzero LLC (L<http://ionzero.com>) for sponsoring the initial development.
+
+=cut
+
 1;
