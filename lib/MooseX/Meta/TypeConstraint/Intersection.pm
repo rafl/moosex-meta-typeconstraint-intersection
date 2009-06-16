@@ -5,7 +5,7 @@ use Moose;
 use MooseX::Types::Moose qw/ArrayRef/;
 use Moose::Util::TypeConstraints 'find_type_constraint';
 use aliased 'Moose::Meta::TypeConstraint';
-use namespace::autoclean;
+use namespace::autoclean -also => 'TypeConstraint';
 
 =head1 DESCRIPTION
 
