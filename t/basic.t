@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More;
 use Moose ();
 use Moose::Meta::TypeConstraint::Role;
 
@@ -61,3 +61,27 @@ like(
 
 is($intersection->validate(AllTheRoles->new        ), undef);
 is($intersection->validate(WithAdditionalRoles->new), undef);
+
+{
+    my $msgs = $intersection->validate_all(NoneOfTheRoles->new);
+    ok(defined $msgs);
+
+    my $i = 0;
+    like($_->[0], $_->[1]) for map {
+        [$msgs->[$i++], qr{^Validation failed for '${_}'}]
+    } qw/Foo Bar Baz/;
+}
+
+{
+    my $msgs = $intersection->validate_all(OneOfTheRoles->new);
+    ok(defined $msgs);
+
+    my $i = 0;
+    like($_->[0], $_->[1]) for map {
+        [$msgs->[$i++], qr{^Validation failed for '${_}'}]
+    } qw/Foo Baz/;
+}
+
+ok(!defined $intersection->validate_all(AllTheRoles->new));
+
+done_testing;

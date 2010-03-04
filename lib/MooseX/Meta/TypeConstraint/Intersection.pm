@@ -127,17 +127,28 @@ returned by the member constraints, or C<undef>.
 
 sub validate {
     my ($self, $value) = @_;
-    my $msg = '';
+    my $msgs = $self->validate_all($value);
+    return undef unless defined $msgs;
+    return join(q{ and } => @{ $msgs }) . ' in ' . $self->name;
+}
 
-    for my $tc (@{ $self->type_constraints }) {
-        my $err = $tc->validate($value);
-        next unless defined $err;
-        $msg .= (length $msg ? ' and ' : '') . $err;
-    }
+=method validate_all($value)
 
-    return length $msg
-        ? $msg . ' in ' . $self->name
-        : undef;
+Same as C<validate>, but returns an array references of error messages from the
+individual validation errors instead of a plain string with the errors
+concatenated.
+
+=cut
+
+sub validate_all {
+    my ($self, $value) = @_;
+
+    my @msgs = map {
+        my $err = $_->validate($value);
+        defined $err ? $err : ();
+    } @{ $self->type_constraints };
+
+    return @msgs ? \@msgs : undef;
 }
 
 =method is_subtype_of($other_constraint)
