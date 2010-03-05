@@ -129,14 +129,14 @@ sub validate {
     my ($self, $value) = @_;
     my $msgs = $self->validate_all($value);
     return undef unless defined $msgs;
-    return join(q{ and } => @{ $msgs }) . ' in ' . $self->name;
+    return join(q{ and } => map { $_->[0] } @{ $msgs }) . ' in ' . $self->name;
 }
 
 =method validate_all($value)
 
-Same as C<validate>, but returns an array references of error messages from the
-individual validation errors instead of a plain string with the errors
-concatenated.
+Same as C<validate>, but returns an array reference of tuples with error
+messages and the type constraints that produced them from the individual
+validation errors instead of a plain string with the errors concatenated.
 
 =cut
 
@@ -145,7 +145,7 @@ sub validate_all {
 
     my @msgs = map {
         my $err = $_->validate($value);
-        defined $err ? $err : ();
+        defined $err ? [ $err, $_ ] : ();
     } @{ $self->type_constraints };
 
     return @msgs ? \@msgs : undef;

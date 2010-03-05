@@ -67,9 +67,12 @@ is($intersection->validate(WithAdditionalRoles->new), undef);
     ok(defined $msgs);
 
     my $i = 0;
-    like($_->[0], $_->[1]) for map {
-        [$msgs->[$i++], qr{^Validation failed for '${_}'}]
-    } qw/Foo Bar Baz/;
+    for my $test (map {
+            [@{ $msgs->[$i++] }, qr{^Validation failed for '${_}'}, $_]
+        } qw/Foo Bar Baz/) {
+        like($test->[0], $test->[2]);
+        is($test->[1]->name, $test->[3]);
+    }
 }
 
 {
@@ -77,9 +80,12 @@ is($intersection->validate(WithAdditionalRoles->new), undef);
     ok(defined $msgs);
 
     my $i = 0;
-    like($_->[0], $_->[1]) for map {
-        [$msgs->[$i++], qr{^Validation failed for '${_}'}]
-    } qw/Foo Baz/;
+    for my $test (map {
+            [@{ $msgs->[$i++] }, qr{^Validation failed for '${_}'}, $_]
+        } qw/Foo Baz/) {
+        like($test->[0], $test->[2]);
+        is($test->[1]->name, $test->[3]);
+    }
 }
 
 ok(!defined $intersection->validate_all(AllTheRoles->new));
